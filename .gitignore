@@ -5,6 +5,7 @@ results/
 auspice/
 build/
 outbreak_data/
+.idea/
 
 # Sensitive environment variables
 environment*
