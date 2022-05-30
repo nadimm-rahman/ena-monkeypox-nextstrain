@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+__author__ = 'Nadim Rahman'
+
 import argparse, datetime, io, re, requests, subprocess
 import pandas as pd
 from requests.auth import HTTPBasicAuth
@@ -82,7 +84,8 @@ class retrieve_data:
         :param date: Date of analysis download
         :return:
         """
-        process = subprocess.Popen(['./download_fasta.sh', 'ENA_Search_{}_{}.tsv'.format(self.ena_search['result_type'], date)],
+        ena_metadata = 'ENA_Search_{}_{}.tsv'.format(self.ena_search['result_type'], date)
+        process = subprocess.Popen(['./download_fasta.sh', ena_metadata],
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
@@ -171,7 +174,7 @@ class process_fastas:
             country, collection_date, host, strain = self.get_metadata()
             new_record = self.create_record(seq, strain, collection_date, country, host)
             records.append(new_record)
-        SeqIO.write(records, "sequences.fasta", "fasta")            # Save all sequence records in FASTA file
+        SeqIO.write(records, "insdc_cleaned_sequences.fasta", "fasta")            # Save all sequence records in FASTA file
 
 
 

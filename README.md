@@ -4,6 +4,8 @@ This is the [Nextstrain](https://nextstrain.org) build for monkeypox virus. Outp
 
 ## Usage
 
+Before running this, data preparation is required. See 'Input data' below.
+
 Copy input data with:
 ```
 mkdir -p data/
@@ -34,53 +36,26 @@ There is little redirection and each rule should be able to be reasoned with on 
 
 ### GenBank data
 
-From ENA Advanced Search, download appropriate metadata and fasta. Bare in mind retrieval of fields below, and ensure that the query includes country and collection date information by default.
+Run `python preprocessing.py`
+- This script downloads appropriate metadata and fasta sequence.
+- Processes the metadata and fasta sequence in preparation for the `augur parse` command below.
 
-Download Genome FASTA, select custom format, and choose the following fields in this order:
+Note: Metadata is downloaded/prepped in this order:
 1. Strain name
 2. GenBank accession
 3. Country
 4. Date
 5. Host
 
-This downloads the file `*.fasta`. Parse this file into sequences and metadata using:
+This prepares the file `insdc_cleaned_sequence.fasta`. Parse this file into sequences and metadata using:
 ```
 augur parse \
- --sequences data/XXXXX.fasta \
+ --sequences data/insdc_cleaned_sequence.fasta \
  --fields strain accession date country host \
- --output-sequences data/sequences.fasta \
- --output-metadata data/metadata.tsv
+ --output-sequences example_data/sequences.fasta \
+ --output-metadata example_data/metadata.tsv
 ```
-
-
-### Outbreak data
-
-- [Monkeypox/PT0001/2022](https://virological.org/t/first-draft-genome-sequence-of-monkeypox-virus-associated-with-the-suspected-multi-country-outbreak-may-2022-confirmed-case-in-portugal/799)
-- [ITM_MPX_1_Belgium](https://virological.org/t/belgian-case-of-monkeypox-virus-linked-to-outbreak-in-portugal/801)
-- [MPXV_USA_2022_MA001](https://www.ncbi.nlm.nih.gov/nuccore/ON563414)
-
-has been saved to `example_data/outbreak.fasta`.
-
-### Data preparation
-
-**Option 1:**
-
-Collect data as described above and store in one or more `data/*.fasta` and `data/*.tsv` file(s).
-
-**Option 2:**
-
-Move the provided metadata and sequences to `data/`:
-```
-cp example_data/metadata.tsv data/metadata.tsv
-cat example_data/sequences.fasta example_data/outbreak.fasta > data/sequences.fasta
-```
-
-**Option 3:**
-
-Download data using [LAPIS](https://mpox-lapis.gen-spectrum.org/docs)
-```
-snakemake --cores 1 -f download_via_lapis
-```
+Now you are ready to follow instructions in 'Usage'.
 
 ### Data use
 
@@ -95,3 +70,9 @@ uncertain.
 
 Follow the [standard installation instructions](https://docs.nextstrain.org/en/latest/install.html) for Nextstrain's suite of software tools.
 Please choose the installation method for your operating system which uses Docker, as currently a pre-release version of Nextalign is required which we've baked into the `--image` argument to `nextstrain build` above.
+
+## Requirements
+
+- Python 3+ (https://www.python.org/downloads/)
+- Nextstrain (https://docs.nextstrain.org/en/latest/install.html)
+- Install packages using `pip install -r requirements.txt`
